@@ -1,2 +1,3 @@
-Clone repository:
-  https://github.com/wenyngcar/CMSC-124-SNOL.git
+To clone repository
+On CLI enter ...
+  git clone https://github.com/wenyngcar/CMSC-124-SNOL.git
