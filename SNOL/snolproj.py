@@ -1,5 +1,6 @@
 import re
 
+# Check if the value can be converted to an integer
 def is_integer(value):
     try:
         int(value)
@@ -7,6 +8,7 @@ def is_integer(value):
     except ValueError:
         return False
 
+# Check if the value can be converted to a float
 def is_float(value):
     try:
         float(value)
@@ -14,17 +16,19 @@ def is_float(value):
     except ValueError:
         return False
 
+# main class to handle SNOL commands
 class SNOLInterpreter:
     def __init__(self):
-        self.variables = {}
+        self.variables = {}  # Stores variables and their values
     
     def execute_command(self, command):
-        # Strip the command of leading/trailing whitespace and handle variations of "EXIT!"
+        # Strip the command of leading/trailing whitespace and handle exit commands
         command = command.strip()
         if command == "EXIT!" or command.lower() == "exit":
             print("Interpreter is now terminated...")
             return False
 
+        # Handles BEG command for creating variables
         if command.startswith("BEG "):
             var = command[4:].strip()
             if not re.match(r'^[a-zA-Z][a-zA-Z0-9]*$', var):
@@ -37,6 +41,8 @@ class SNOLInterpreter:
                     self.variables[var] = float(input_value)
                 else:
                     print("Invalid number format")
+        
+        # handles PRINT command to print variable values or expressions
         elif command.startswith("PRINT "):
             expr = command[6:].strip()
             value = self.evaluate_expression(expr)
@@ -45,6 +51,7 @@ class SNOLInterpreter:
             else:
                 print(f"SNOL> [{expr}] = {value}")
         else:
+            # Evaluate and execute other expressions or commands
             result = self.evaluate_expression(command)
             if isinstance(result, str):
                 print(result)
@@ -54,10 +61,11 @@ class SNOLInterpreter:
         return True
 
     def evaluate_expression(self, expr):
+        # Check if the expression is a variable name
         if expr in self.variables:
             return self.variables[expr]
         
-        # Check for assignment
+        # Check for assignment operation
         if "=" in expr:
             var, val_expr = expr.split("=", 1)
             var = var.strip()
@@ -104,13 +112,17 @@ class SNOLInterpreter:
                 i += 2
             return result
 
+        # Check if the expression is an integer
         if re.match(r'^[-]?[0-9]+$', expr):
             return int(expr)
+        # Check if the expression is a float
         if re.match(r'^[-]?[0-9]+\.[0-9]+$', expr):
             return float(expr)
 
+        # Return an error if the expression is not recognized
         return "Undefined variable or invalid number [" + expr + "]"
 
+# Function to start the SNOL interpreter
 def run_snol_interpreter():
     print("The SNOL environment is now active, you may proceed with giving your commands.")
     interpreter = SNOLInterpreter()
@@ -119,4 +131,5 @@ def run_snol_interpreter():
         if not interpreter.execute_command(command):
             break
 
+# Start the SNOL interpreter
 run_snol_interpreter()
