@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 import re
 
-=======
->>>>>>> 000fee5 (init: repository)
 def is_integer(value):
     try:
         int(value)
@@ -29,7 +26,9 @@ class SNOLInterpreter:
             return False
 
         if command.startswith("BEG "):
+            # Stores the expression except for the first 4 characters in the command.
             var = command[4:].strip()
+            print (command[4:].strip())
             if not re.match(r'^[a-zA-Z][a-zA-Z0-9]*$', var):
                 print(f"Unknown variable [{var}]")
             else:
@@ -63,6 +62,11 @@ class SNOLInterpreter:
         # Check for assignment
         if "=" in expr:
             var, val_expr = expr.split("=", 1)
+
+            # Throws an error if first character is an integer or float.
+            if (is_integer((expr.split("=", 1)[0][0]))):
+                print ("Error! Variable name must not start with a number.")
+                return
             var = var.strip()
             val_expr = val_expr.strip()
             value = self.evaluate_expression(val_expr)
