@@ -79,6 +79,12 @@ class SNOLInterpreter:
         tokens = re.split(r'(\+|\-|\*|\/|\%)', expr)
         if len(tokens) > 1:
             tokens = [token.strip() for token in tokens if token.strip()]
+            print(tokens)
+            for singleToken, opr in enumerate(tokens):
+                print(opr)
+                if singleToken < len(tokens) - 1:  # Check to ensure the next index is within range
+                    next_opr = tokens[singleToken + 1]
+                    print(next_opr)  # Access and print the next element
             if len(tokens) % 2 == 0:
                 return "Unknown command! Does not match any valid command of the language."
 
@@ -86,29 +92,8 @@ class SNOLInterpreter:
             if isinstance(result, str):
                 return result
             
-            i = 1
-            while i < len(tokens):
-                operator = tokens[i]
-                next_val = self.evaluate_expression(tokens[i+1])
-                if isinstance(next_val, str):
-                    return next_val
-                
-                if (isinstance(result, float) and isinstance(next_val, int)) or (isinstance(result, int) and isinstance(next_val, float)):
-                    return "Error! Operands must be of the same type in an arithmetic operation!"
-
-                if operator == '+':
-                    result += next_val
-                elif operator == '-':
-                    result -= next_val
-                elif operator == '*':
-                    result *= next_val
-                elif operator == '/':
-                    result /= next_val
-                elif operator == '%':
-                    if isinstance(result, float) or isinstance(next_val, float):
-                        return "Modulo operation not allowed with floating-point numbers."
-                    result %= next_val
-                i += 2
+            evaluate_operation(self ,result, tokens)
+            
             return result
 
         if re.match(r'^[-]?[0-9]+$', expr):
@@ -125,5 +110,32 @@ def run_snol_interpreter():
         command = input("Command: ")
         if not interpreter.execute_command(command):
             break
+
+def evaluate_operation(self, result, tokens):
+    i = 1
+    while i < len(tokens):
+        operator = tokens[i]
+        #print(operator)
+        next_val = self.evaluate_expression(tokens[i+1])
+        #print(next_val)
+        if isinstance(next_val, str):
+            return next_val
+        
+        if (isinstance(result, float) and isinstance(next_val, int)) or (isinstance(result, int) and isinstance(next_val, float)):
+            return "Error! Operands must be of the same type in an arithmetic operation!"
+
+        if operator == '+':
+            result += next_val
+        elif operator == '-':
+            result -= next_val
+        elif operator == '*':
+            result *= next_val
+        elif operator == '/':
+            result /= next_val
+        elif operator == '%':
+            if isinstance(result, float) or isinstance(next_val, float):
+                return "Modulo operation not allowed with floating-point numbers."
+            result %= next_val
+        i += 2
 
 run_snol_interpreter()
