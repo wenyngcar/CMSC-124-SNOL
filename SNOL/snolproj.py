@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 import re
 
+=======
+>>>>>>> 000fee5 (init: repository)
 def is_integer(value):
     try:
         int(value)
